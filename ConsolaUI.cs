@@ -47,6 +47,17 @@ namespace Ahorcado
             }
             Console.ResetColor();
             Console.WriteLine("\n");
+
+            if (_motor.MostrarPista)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine("PISTA:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"La palabra empieza con: '{char.ToUpper(_motor.PalabraSecreta[0])}'");
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+
         }
 
         public char PedirLetra()
@@ -65,7 +76,7 @@ namespace Ahorcado
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"\n[!] {mensaje}");
             Console.ResetColor();
-            System.Threading.Thread.Sleep(1000); // Pausa breve para que el usuario lea el mensaje
+            System.Threading.Thread.Sleep(1000); 
         }
 
         public bool PreguntarOtraVez()
@@ -78,7 +89,7 @@ namespace Ahorcado
 
         private void MostrarAhorcado()
         {
-            // Cambiamos el color del dibujo según los intentos restantes
+
             Console.ForegroundColor = _motor.IntentosRestantes <= 2 ? ConsoleColor.Red : ConsoleColor.DarkYellow;
 
             string[] etapas = new string[]

@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace Ahorcado
 {
-
     public class Juego
     {
         private List<string> _palabras = new()
@@ -52,7 +51,7 @@ namespace Ahorcado
 
                 _letrasUsadas.Add(letra);
 
-                if (!_palabraSecreta.Contains(letra))
+                if (!_palabraSecreta.ToLower().Contains(letra))
                 {
                     _intentosRestantes--;
                 }
@@ -76,7 +75,7 @@ namespace Ahorcado
         {
             foreach (char c in _palabraSecreta)
             {
-                if (!_letrasUsadas.Contains(c)) return false;
+                if (!_letrasUsadas.Contains(char.ToLower(c))) return false;
             }
             return true;
         }
@@ -92,22 +91,38 @@ namespace Ahorcado
 
             foreach (char c in _palabraSecreta)
             {
-                Console.Write(_letrasUsadas.Contains(c) ? $"{c} " : "_ ");
+                Console.Write(_letrasUsadas.Contains(char.ToLower(c)) ? $"{c} " : "_ ");
             }
             Console.WriteLine();
+
+            // --- Lógica de Pistas ---
+            if (_intentosRestantes <= 3)
+            {
+                // Busca la primera letra (en minúscula para comparar) que no esté en la lista
+                char? letraPista = _palabraSecreta
+                    .Select(c => char.ToLower(c))
+                    .FirstOrDefault(l => !_letrasUsadas.Contains(l));
+
+                if (letraPista != '\0')
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"\n💡 PISTA: Te falta la letra '{char.ToUpper(letraPista.Value)}'");
+                    Console.ResetColor();
+                }
+            }
         }
 
         private void MostrarAhorcado()
         {
             string[] etapas = new string[]
             {
-                "  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========", // 0 fallos
-                "  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========", // 1 fallo
-                "  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========", // 2 fallos
-                "  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========", // 3 fallos
-                "  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========", // 4 fallos
-                "  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========", // 5 fallos
-                "  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n========="  // 6 fallos
+                "  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========",
+                "  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========",
+                "  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========",
+                "  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========",
+                "  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========",
+                "  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========",
+                "  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n========="
             };
 
             Console.WriteLine(etapas[6 - _intentosRestantes]);
