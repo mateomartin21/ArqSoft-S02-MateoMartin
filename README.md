@@ -1,9 +1,30 @@
-#  Ahorcado un jeugo sencillo en C# con .NET 10.0 y C# 14.0
+#  Juego del Ahorcado 
+
+Este es un proyecto educativo de consola desarrollado en **C#** y **.NET**. El objetivo principal fue transformar una aplicación monolítica en una arquitectura desacoplada y mantenible aplicando los principios **SOLID**.
+
+##  Características
+- **Arquitectura Limpia:** Separación total entre lógica de negocio, interfaz de usuario y persistencia.
+- **Sistema de Categorías:** El jugador puede elegir entre *Arquitectura*, *POO* o *.NET*.
+- **Pistas Dinámicas:** El sistema ofrece una pista inteligente cuando quedan 3 intentos o menos.
+- **Interfaz Colorida:** Uso de `ConsoleColor` para una experiencia de usuario mejorada en la terminal.
+
+##  Arquitectura (Principios SOLID Aplicados)
+
+| Principio | Aplicación en este proyecto |
+| :--- | :--- |
+| **SRP** | Se dividió el código en `MotorAhorcado` (lógica), `ConsolaUI` (vista) y `PalabrasEnMemoria` (datos). |
+| **OCP** | El sistema permite agregar nuevas categorías o tipos de repositorios (ej. una base de datos) sin modificar el motor del juego. |
+| **DIP** | El `MotorAhorcado` no depende de una clase fija, sino de la interfaz `IRepositorioPalabras`. |
+
+## 🛠 Estructura del Proyecto
+- `Program.cs`: Orquestador del flujo del juego.
+- `MotorAhorcado.cs`: Reglas de negocio y control de intentos.
+- `ConsolaUI.cs`: Manejo de entradas, salidas y renderizado del dibujo.
+- `IRepositorioPalabras.cs`: Contrato para la obtención de datos.
+- `PalabrasEnMemoria.cs`: Implementación de palabras filtradas por categoría.
+
+##  Cláusula de Uso de IA
+Este proyecto ha sido desarrollado con el apoyo de **Gemini (Inteligencia Artificial)**. 
+- La IA fue utilizada para la **refactorización de código**, aplicacion de colores en la consola y para mejorar la experiencia de usuario, pero no para generar la lógica del juego ni el diseño de la arquitectura. 
 
 
-Violaciones SOlID:
-| Situación | Principio Violado | Explicación |
-| :--- | :--- | :--- |
-| **`Juego` controla todo:** turnos, dibujo del tablero, mensajes y selección de palabras. | **SRP** (Single Responsibility Principle) | La clase tiene **demasiadas responsabilidades**. Debería existir una separación entre la lógica de negocio, la interfaz de usuario (Consola) y el proveedor de datos (Palabras). |
-| **Palabras "hardcodeadas":** Las palabras están definidas dentro del constructor de la clase. | **DIP** (Dependency Inversion Principle) | Existe una **dependencia rígida** de una lista interna. Lo correcto sería inyectar una abstracción (interfaz) que provea las palabras desde cualquier origen (archivo, DB o API). |
-| **Dificultad para extender:** Para añadir nuevas variantes o modos de juego, se requiere editar la clase base. | **OCP** (Open/Closed Principle) | El código **no está cerrado a la modificación ni abierto a la extensión**. Añadir nuevas reglas obliga a alterar el código existente, aumentando el riesgo de introducir errores. |
