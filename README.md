@@ -1,1 +1,1 @@
-# Ahorcado
+#  Crear la clase God
