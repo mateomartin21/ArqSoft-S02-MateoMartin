@@ -1,23 +1,29 @@
-﻿namespace Ahorcado
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Ahorcado
 {
     public class PalabrasEnMemoria : IRepositorioPalabras
     {
-        private readonly List<string> _palabras = new()
-{
-"arquitectura"
-,
-"interfaz"
-,
-"polimorfismo"
-,
-"encapsulamiento"
-,
-"herencia"
-};
+        private readonly Dictionary<string, List<string>> _categorias = new()
+        {
+            { "Arquitectura", new List<string> { "arquitectura", "componente", "descomposicion", "dependencia", "acoplamiento" } },
+            { "POO", new List<string> { "polimorfismo", "encapsulamiento", "herencia", "abstraccion", "clase" } },
+            { ".NET", new List<string> { "ensamblado", "namespace", "interfaz", "delegado", "middleware" } }
+        };
+
+        private string _categoriaSeleccionada;
+
+        public PalabrasEnMemoria(string categoria)
+        {
+            _categoriaSeleccionada = categoria;
+        }
+
         public string ObtenerPalabraAleatoria()
         {
-            var random = new Random();
-            return _palabras[random.Next(_palabras.Count)];
+            var lista = _categorias[_categoriaSeleccionada];
+            return lista[new Random().Next(lista.Count)];
         }
     }
 }

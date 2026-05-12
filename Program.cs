@@ -1,13 +1,18 @@
 ﻿
-var repositorio = new Ahorcado.PalabrasEnMemoria();
 bool jugarOtraVez;
 
 do
 {
 
+    var uiInicial = new Ahorcado.ConsolaUI(null);
+    string categoriaElegida = uiInicial.PedirCategoria();
+
+    var repositorio = new Ahorcado.PalabrasEnMemoria(categoriaElegida);
+
     var motor = new Ahorcado.MotorAhorcado(repositorio);
     var ui = new Ahorcado.ConsolaUI(motor);
 
+    Console.Clear();
     Console.WriteLine("=== AHORCADO ===");
 
     while (!motor.Ganado() && !motor.Perdido())
