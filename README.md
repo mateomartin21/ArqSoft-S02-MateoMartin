@@ -1,1 +1,1 @@
-#  Crear la clase God
+#  Ahorcado un jeugo sencillo en C# con .NET 10.0 y C# 14.0
