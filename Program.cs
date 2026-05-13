@@ -1,43 +1,75 @@
-﻿
-bool jugarOtraVez;
+﻿bool jugarOtraVez = false;
 
-do
+Console.WriteLine("¿Qué juego quieres jugar?");
+Console.WriteLine("  1 — Ahorcado");
+Console.WriteLine("  2 — Viborita");
+Console.Write("Opción: ");
+var opcion = Console.ReadLine();
+
+if (opcion == "2")
 {
+    var motor = new Ahorcado.MotorViborita();
+    var ui = new Ahorcado.ConsolaUIViborita(motor);
 
-    var uiInicial = new Ahorcado.ConsolaUI(null);
-    string categoriaElegida = uiInicial.PedirCategoria();
-
-    var repositorio = new Ahorcado.PalabrasEnMemoria(categoriaElegida);
-
-    var motor = new Ahorcado.MotorAhorcado(repositorio);
-    var ui = new Ahorcado.ConsolaUI(motor);
-
-    Console.Clear();
-    Console.WriteLine("=== AHORCADO ===");
+    Console.CursorVisible = false;
 
     while (!motor.Ganado() && !motor.Perdido())
     {
         ui.MostrarTablero();
-        char letra = ui.PedirLetra();
+        var tecla = ui.LeerTecla();
 
-        if (motor.LetraYaUsada(letra))
-        {
-            ui.MostrarMensaje("Ya usaste esa letra.");
-            continue;
-        }
+        if (tecla == ConsoleKey.Q) break;
 
-        motor.RegistrarLetra(letra);
+        if (tecla != ConsoleKey.NoName)
+            motor.CambiarDireccion(tecla);
+
+        motor.Avanzar();
+        Thread.Sleep(150); // velocidad del juego
     }
 
     ui.MostrarTablero();
-    if (motor.Ganado())
-        ui.MostrarMensaje($"\n¡Ganaste! La palabra era: {motor.PalabraSecreta}");
-    else
-        ui.MostrarMensaje($"\nPerdiste. La palabra era: {motor.PalabraSecreta}");
+    ui.MostrarMensaje(motor.Ganado()
+        ? "\n¡Ganaste! Llegaste a 10 puntos."
+        : "\nGame over.");
+}
+else // Por defecto entra al Ahorcado si no es "2"
+{
+    do
+    {
+        var uiInicial = new Ahorcado.ConsolaUI(null);
+        string categoriaElegida = uiInicial.PedirCategoria();
 
-    jugarOtraVez = ui.PreguntarOtraVez();
+        var repositorio = new Ahorcado.PalabrasEnMemoria(categoriaElegida);
+        var motor = new Ahorcado.MotorAhorcado(repositorio);
+        var ui = new Ahorcado.ConsolaUI(motor);
 
-} while (jugarOtraVez);
+        Console.Clear();
+        Console.WriteLine("=== AHORCADO ===");
 
-Console.WriteLine("Gracias por jugar. Presiona cualquier tecla para salir...");
+        while (!motor.Ganado() && !motor.Perdido())
+        {
+            ui.MostrarTablero();
+            char letra = ui.PedirLetra();
+
+            if (motor.LetraYaUsada(letra))
+            {
+                ui.MostrarMensaje("Ya usaste esa letra.");
+                continue;
+            }
+
+            motor.RegistrarLetra(letra);
+        }
+
+        ui.MostrarTablero();
+        if (motor.Ganado())
+            ui.MostrarMensaje($"\n¡Ganaste! La palabra era: {motor.PalabraSecreta}");
+        else
+            ui.MostrarMensaje($"\nPerdiste. La palabra era: {motor.PalabraSecreta}");
+
+        jugarOtraVez = ui.PreguntarOtraVez();
+
+    } while (jugarOtraVez);
+}
+
+Console.WriteLine("\nGracias por jugar. Presiona cualquier tecla para salir...");
 Console.ReadKey();
